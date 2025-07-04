@@ -125,6 +125,30 @@ def create_brochure(company_name, url):
     result = response.choices[0].message.content
     display(Markdown(result))
 
+
+## Assignment 
+def get_english_brochure(company_name, url):
+    response = openai.chat.completions.create(
+        model=MODEL,
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": get_brochure_user_prompt(company_name, url)}
+          ],
+    )
+    return response.choices[0].message.content
+
+
+def create_dutch_brochure(company_name, url):
+    response = openai.chat.completions.create(
+       model = MODEL,
+       messages = [
+           {"role": "system", "content": "you are an assistant who translates this company brochure from english to dutch and responde in markdown including all the english details"},
+           {"role": "user", "content": get_english_brochure(company_name, url)}
+       ]
+    )
+    result = response.choices[0].message.content
+    display(Markdown(result))
+
 def __main__():
-    #get_links("https://huggingface.co")
-    create_brochure("HuggingFace", "https://huggingface.co") ## second call to the OpenAI API
+    create_brochure("HuggingFace", "https://huggingface.co") ## second call to the OpenAI API it will create an English brochure
+    ## create_dutch_brochure("HuggingFace", "https://huggingface.co") ## third call to the OpenAI API to make a Dutch brochure
